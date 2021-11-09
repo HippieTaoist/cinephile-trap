@@ -1,13 +1,19 @@
 const {
   isEmpty,
-  isAlphaNumeric,
+  isAlphanumeric,
   isAlpha,
   isEmail,
   isStrongPassword,
 } = require("validator");
 
 function validateCreateData(req, res, next) {
-  const { firstName, lastName, username, email, password } = req.body;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    password
+  } = req.body;
 
   let errObj = {};
 
@@ -21,7 +27,7 @@ function validateCreateData(req, res, next) {
       "You got your last name wrong... no numbers or special characters.";
   }
 
-  if (!isAlphaNumeric(username)) {
+  if (!isAlphanumeric(username)) {
     errObj.username = "Username is alphanumberical: Numbers and Letters ONLY!";
   }
 
@@ -39,4 +45,6 @@ function validateCreateData(req, res, next) {
   }
 }
 
-module.exports = { validateCreateData };
+module.exports = {
+  validateCreateData
+};

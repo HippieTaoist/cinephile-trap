@@ -28,6 +28,9 @@ router.get("/", getUsers)
 //   res.json({ message: "IM A BACKEND HOME PAGE" });
 // });
 
-router.post("/create-user", function (req, res) {})
+router.post("/create-user", checkIsUndefined, checkIsEmpty, validateCreateData, createUser)
+
+router.post("/login-user", checkIsUndefined, checkIsEmpty, validateLoginData, loginUser)
+
 
 module.exports = router;

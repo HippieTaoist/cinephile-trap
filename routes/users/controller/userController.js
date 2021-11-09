@@ -90,10 +90,61 @@ async function createUser(req, res) {
     }
 }
 
+async function loginUser(req, res) {
+    const {
+        email,
+        username,
+        password,
+    } = req.body;
+
+    try {
+
+        let foundUserEmail = await User.findOne({
+            email: email,
+        })
+        // let foundUserUsername = await User.findOne({
+        //     username: username,
+        // })
+
+        if (!foundUserEmail) {
+            return res.status(500).json({
+                message: "Error in Logging In User",
+                error: " Go SIgn UP",
+            })
+        } else {
+            let comparedPassword = await bcrypt.compare(password, foundUserEmail.password);
+            if (!comparedPassword) {
+                return res.status(500).json({
+                    message: "error",
+                    error: "Please check email and password",
+                });
+            } else {
+                let jwtToken = jwt.sign({
+                    email: foundUserEmail.email,
+                    username: foundUserEmail.username,
+                }, process.env.SECRET_KEY, {
+                    expiresIn: "24h",
+                });
+                return res.json({
+                    message: "Success Tokenizing",
+                    payload: jwtToken,
+                })
+            }
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: "Login Error.. WHAT DID YOU DO!!!!",
+            error: err.message
+        })
+    }
+
+
+}
 
 
 
 module.exports = {
     getUsers,
     createUser,
+    loginUser,
 }
