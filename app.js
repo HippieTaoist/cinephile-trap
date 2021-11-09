@@ -15,7 +15,11 @@ const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGO_DB)
   .then(() => {
-    console.log("     /////            /////    ");
+    console.log("");
+    console.log("         [On Port 3001] ");
+    console.log("");
+    console.log("     ^^^^^            ^^^^^    ");
+    // console.log("");
     console.log("     [Con]            [noC]");
     console.log("     [nEc]            [cEn]");
     console.log("     [ted]            [det]");
@@ -30,6 +34,7 @@ mongoose
     console.log("        B_{WE ARE UP!}_B    ");
     console.log("    ");
     console.log('       "Hack The Planet!"          ');
+    console.log("");
   })
   .catch((err) => console.error(err));
 

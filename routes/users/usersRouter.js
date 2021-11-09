@@ -20,7 +20,7 @@ const {
 } = require("./lib/authMiddleware/index");
 
 router.get("/", function (req, res) {
-  res.json({ message: "IM A HOME PAGE" });
+  res.json({ message: "IM A BACKEND HOME PAGE" });
 });
 
 module.exports = router;
