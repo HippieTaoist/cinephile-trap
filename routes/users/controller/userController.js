@@ -141,10 +141,26 @@ async function loginUser(req, res) {
 
 }
 
+async function profileUser(req, res) {
 
+    try {
+        let decodedToken = jwt.decode(req.body.token, process.env.SECRET_KEY);
+
+        res.json({
+            token: decodedToken
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: "There is an error pulling your profile",
+            error: err.message,
+        })
+    }
+
+}
 
 module.exports = {
     getUsers,
     createUser,
     loginUser,
+    profileUser,
 }

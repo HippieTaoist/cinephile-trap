@@ -6,7 +6,7 @@ const {
     createUser,
     getUsers,
     loginUser,
-    userProfile,
+    profileUser,
     updateUser,
     getUserInfo,
 } = require("./controller/userController");
@@ -31,6 +31,7 @@ router.get("/", getUsers)
 router.post("/create-user", checkIsUndefined, checkIsEmpty, validateCreateData, createUser)
 
 router.post("/login-user", checkIsUndefined, checkIsEmpty, validateLoginData, loginUser)
+router.get("/profile-user", profileUser)
 
 
 module.exports = router;
