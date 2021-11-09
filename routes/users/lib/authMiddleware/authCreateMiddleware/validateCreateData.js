@@ -28,7 +28,7 @@ function validateCreateData(req, res, next) {
   }
 
   if (!isAlphanumeric(username)) {
-    errObj.username = "Username is alphanumberical: Numbers and Letters ONLY!";
+    errObj.username = "Username is alphanumerical: Numbers and Letters ONLY!";
   }
 
   if (!isEmail(email)) {

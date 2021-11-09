@@ -8,14 +8,23 @@ function jwtMiddleware(req, res, next) {
       let decodedToken = jwt.verify(slicedToken, process.env.SECRET_KEY);
 
       res.locals.decodedData = decodedToken;
+
+      next()
     } else {
-      throw { message: "Authorization Denied!" };
+      throw {
+        message: "Authorization Denied!"
+      };
     }
   } catch (err) {
     res
       .status(500)
-      .json({ message: "Error, Ware? Middle of jwt", error: err.message });
+      .json({
+        message: "Error, Ware? Middle of jwt",
+        error: err.message
+      });
   }
 }
 
-module.exports = { jwtMiddleware };
+module.exports = {
+  jwtMiddleware
+};

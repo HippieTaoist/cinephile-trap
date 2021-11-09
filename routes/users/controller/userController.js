@@ -158,9 +158,25 @@ async function profileUser(req, res) {
 
 }
 
+async function updateUser(req, res) {
+    try {
+
+
+        res.json({
+            message: "Update WOOT WOOT!!"
+        })
+    } catch (err) {
+        res.status(500).json({
+            message: "There is an error updating your profile",
+            error: err.message
+        })
+    }
+}
+
 module.exports = {
     getUsers,
     createUser,
     loginUser,
     profileUser,
+    updateUser
 }
