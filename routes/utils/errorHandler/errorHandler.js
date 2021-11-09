@@ -20,7 +20,7 @@ function errorHandler(err) {
         message = parsedErrorMessage(err);
         break;
       default:
-        message = "Somethig went wrong. Contact support ";
+        message = "Something went wrong. Contact support ";
     }
   } else if (err.message) {
     return err.message;
