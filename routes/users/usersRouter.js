@@ -32,7 +32,8 @@ router.post("/create-user", checkIsUndefined, checkIsEmpty, validateCreateData, 
 
 router.post("/login-user", checkIsUndefined, checkIsEmpty, validateLoginData, loginUser)
 router.get("/profile-user", jwtMiddleware, profileUser)
-router.put("/update-user", jwtMiddleware, checkIsUndefined, checkIsEmpty, updateUser)
+router.put("/update-user", jwtMiddleware, checkIsUndefined, updateUser)
+// , checkIsEmpty -->>> only checks for strings. read into validator more.
 
 
 module.exports = router;

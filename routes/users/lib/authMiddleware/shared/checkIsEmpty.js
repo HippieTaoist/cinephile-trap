@@ -1,4 +1,6 @@
-const { isEmpty } = require("validator");
+const {
+  isEmpty
+} = require("validator");
 
 function checkIsEmpty(req, res, next) {
   let body = req.body;
@@ -20,4 +22,6 @@ function checkIsEmpty(req, res, next) {
   }
 }
 
-module.exports = { checkIsEmpty };
+module.exports = {
+  checkIsEmpty,
+};

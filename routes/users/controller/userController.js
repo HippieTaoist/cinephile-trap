@@ -1,7 +1,7 @@
 const User = require("../model/User");
+const Movie = require("../../movies/model/Movie");
 
 const bcrypt = require("bcryptjs");
-
 const {
     isEmpty,
     isAlpha,
@@ -9,13 +9,22 @@ const {
     isEmail,
     isStrongPassword,
 } = require("validator");
-
 const jwt = require("jsonwebtoken");
-
-const errorHandler = require("../../utils/errorHandler/errorHandler");
 const {
     createConnection
 } = require("mongoose");
+
+const errorHandler = require("../../utils/errorHandler/errorHandler");
+const {
+    createMovie
+} = require("../../movies/controller/moviesController")
+
+
+
+
+
+
+
 
 async function getUserInfo(req, res, next) {
     try {
@@ -160,11 +169,84 @@ async function profileUser(req, res) {
 
 async function updateUser(req, res) {
     try {
+        const {
+            likeIt,
+            password
+        } = req.body
 
+        // console.log(res.locals.decodedData);
 
-        res.json({
-            message: "Update WOOT WOOT!!"
+        const decodedData = res.locals.decodedData;
+
+        let foundUser = await User.findOne({
+            email: decodedData.email
         })
+
+        let foundUserID = foundUser._id.toString()
+
+        let userFavoriteMovieArray = foundUser.movieFavorites
+
+
+        // this path works for
+        // console.log(foundUser.movieFavorites); //null
+
+        // THIS IS YOUR OBJECT ID
+        // console.log(foundUser._id.toString())
+        // console.log(foundUserID)
+        // console.log(req.body.movieTitle);
+        // console.log(req.body.moviePosterUrl);
+        // console.log(req.body.imdbLink);
+        // thios user ID will be taken from the token
+        // console.log(req.body.userID);
+        // console.log(req.body.likeIt);
+
+        let foundMovie = await Movie.findOne({
+            imdbID: req.body.imdbID
+        })
+        // console.log(foundMovie);
+        if (!foundMovie) {
+            let theMovie = await createMovie(foundUserID, req.body)
+            console.log("themovie", theMovie);
+
+
+            userFavoriteMovieArray.push(theMovie)
+
+            foundUser.movieFavorites = userFavoriteMovieArray
+            await foundUser.save()
+
+            // theory: had to reassign foundMovie since it was edited and saved. =>not sure how correct I am but it works.
+            foundMovie = await Movie.findOne({
+                imdbID: req.body.imdbID
+            })
+            res.json({
+                message: "Update/Newly FAVORITED Movie!! WOOT WOOT!!",
+                foundMovie
+            })
+        } else {
+
+
+            console.log("cinephiles", foundMovie.cinephiles);
+            let foundCinephiles = foundMovie.cinephiles
+
+            if (foundCinephiles.find(cinephile => cinephile === req.body.userID)) {
+                res.json({
+                    message: "yolo!"
+                })
+            }
+            // foundCinephiles.push(req.body.userID)
+
+
+
+            console.log(foundCinephiles);
+            await foundMovie.save()
+            res.json({
+                message: "youre the best!",
+
+            })
+        }
+
+
+
     } catch (err) {
         res.status(500).json({
             message: "There is an error updating your profile",
