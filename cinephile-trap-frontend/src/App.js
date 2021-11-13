@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+import jwtDecode from "jwt-decode";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import Nav from "./components/nav/Nav";
+import SignIn from "./components/signIn/SignIn";
+import SignUp from "./components/signUp/SignUp";
+import ProtectedHome from "./components/protectHome/ProtectHome";
+import PrivateRoute from "./components/privateRoute/PrivateRoute";
+
+require("dotenv").config();
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let jwtToken = window.localStorage.getItem("jwtToken");
+
+    if (jwtToken) {
+      let decodedToken = jwtDecode(jwtToken);
+
+      const currentTime = Date.now() / 1000;
+
+      if (decodedToken.exp < currentTime) {
+        window.localStorage.removeItem("jwtToken");
+        setUser(null);
+      } else {
+        setUser({
+          email: decodedToken.email,
+          username: decodedToken.username,
+        });
+      }
+    }
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ToastContainer theme="colored" />
+      <Router>
+        <Nav user={user} setUser={setUser} />
+      </Router>
+    </>
   );
 }
 
