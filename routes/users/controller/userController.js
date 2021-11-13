@@ -16,7 +16,8 @@ const {
 
 const errorHandler = require("../../utils/errorHandler/errorHandler");
 const {
-    createMovie
+    createMovie,
+    updateMovieByImdbId,
 } = require("../../movies/controller/moviesController")
 
 
@@ -28,6 +29,7 @@ const {
 
 async function getUserInfo(req, res, next) {
     try {
+        console.log(res.locals.decodedData);
         const decodedData = res.locals.decodedData;
         const foundUser = await User.findOne({
                 email: decodedData.email,
@@ -131,8 +133,9 @@ async function loginUser(req, res) {
                 let jwtToken = jwt.sign({
                     email: foundUserEmail.email,
                     username: foundUserEmail.username,
+
                 }, process.env.SECRET_KEY, {
-                    expiresIn: "24h",
+                    expiresIn: "2400h",
                 });
                 return res.json({
                     message: "Success Tokenizing",
@@ -155,6 +158,8 @@ async function profileUser(req, res) {
     try {
         let decodedToken = jwt.decode(req.body.token, process.env.SECRET_KEY);
 
+
+
         res.json({
             token: decodedToken
         })
@@ -168,95 +173,81 @@ async function profileUser(req, res) {
 }
 
 async function updateUser(req, res) {
+    console.log('');
+    console.log('');
+    console.log('                updateUser Called');
+    console.log('');
+    console.log('');
     try {
         const {
+            imdbID,
             likeIt,
-            password
         } = req.body
-
-        // console.log(res.locals.decodedData);
-
         const decodedData = res.locals.decodedData;
 
         let foundUser = await User.findOne({
             email: decodedData.email
         })
-
-        let foundUserID = foundUser._id.toString()
-
         let userFavoriteMovieArray = foundUser.movieFavorites
-
-
-        // this path works for
-        // console.log(foundUser.movieFavorites); //null
-
-        // THIS IS YOUR OBJECT ID
-        // console.log(foundUser._id.toString())
-        // console.log(foundUserID)
-        // console.log(req.body.movieTitle);
-        // console.log(req.body.moviePosterUrl);
-        // console.log(req.body.imdbLink);
-        // thios user ID will be taken from the token
-        // console.log(req.body.userID);
-        // console.log(req.body.likeIt);
-
         let foundMovie = await Movie.findOne({
-            imdbID: req.body.imdbID
+            imdbID: imdbID
         })
-        // console.log(foundMovie);
-        if (!foundMovie) {
-            let theMovie = await createMovie(foundUserID, req.body)
-            console.log("themovie", theMovie);
 
+
+        if (!foundMovie) {
+            let theMovie = await createMovie(foundUser, req.body)
+            console.log("Newly Created Movie: \n", theMovie);
 
             userFavoriteMovieArray.push(theMovie)
-
             foundUser.movieFavorites = userFavoriteMovieArray
             await foundUser.save()
 
             // theory: had to reassign foundMovie since it was edited and saved. =>not sure how correct I am but it works.
             foundMovie = await Movie.findOne({
-                imdbID: req.body.imdbID
+                imdbID: imdbID
             })
             res.json({
-                message: "Update/Newly FAVORITED Movie!! WOOT WOOT!!",
+                message: "Newly FAVORITED Movie!! WOOT WOOT!! Thanks for adding to the server!",
                 foundMovie
             })
         } else {
+            let updatedMovie = await updateMovieByImdbId(foundUser, foundMovie, likeIt)
+            // Promise.all((updatedMovie).then(value => {
+            //     console.log(value)
+            // }))
 
+            console.log("updatedMovie:   ", updatedMovie)
+            if (updatedMovie) {
 
-            console.log("cinephiles", foundMovie.cinephiles);
-            let foundCinephiles = foundMovie.cinephiles
-
-            if (foundCinephiles.find(cinephile => cinephile === req.body.userID)) {
                 res.json({
-                    message: "yolo!"
+                    message: "Updated Movie!! WOOT WOOT",
+                    updatedMovie: updatedMovie,
+                })
+            } else {
+                res.status(404).json({
+                    message: "Movie Has Been Removed From Our Server"
                 })
             }
-            // foundCinephiles.push(req.body.userID)
 
 
 
-            console.log(foundCinephiles);
-            await foundMovie.save()
-            res.json({
-                message: "youre the best!",
-
-            })
         }
+
 
 
 
     } catch (err) {
         res.status(500).json({
             message: "There is an error updating your profile",
-            error: err.message
+            error: err.message,
+            err
         })
     }
 }
 
 module.exports = {
     getUsers,
+    getUserInfo,
     createUser,
     loginUser,
     profileUser,

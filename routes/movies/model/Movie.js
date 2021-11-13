@@ -1,9 +1,15 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-    cinephiles: [{
+
+    createdByCinephile: {
         type: mongoose.Schema.ObjectId,
         ref: "user"
+
+    },
+    cinephiles: [{
+        type: mongoose.Schema.ObjectId,
+        ref: "user",
     }],
     imdbID: {
         type: String,

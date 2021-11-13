@@ -22,6 +22,7 @@ const {
 
 
 router.get("/", getUsers)
+router.get("/my-favorite-movies", jwtMiddleware, getUserInfo)
 
 
 //            function (req, res) {
