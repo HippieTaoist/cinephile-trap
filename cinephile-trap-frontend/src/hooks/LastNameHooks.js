@@ -1,5 +1,10 @@
-import { useState, useEffect } from "react";
-import { isAlpha } from "validator";
+import {
+  useState,
+  useEffect
+} from "react";
+import {
+  isAlpha
+} from "validator";
 
 export default function LastNameHooks() {
   const [lastName, setLastName] = useState("");
@@ -10,8 +15,8 @@ export default function LastNameHooks() {
   useEffect(() => {
     if (onFocus) {
       if (lastName.length > 0) {
-        if (!isAlpha) {
-          setError("Can not have special characters in the last name");
+        if (!isAlpha(lastName)) {
+          setError("Can not have special characters or numbers in the last name");
         }
       }
     }
@@ -24,14 +29,25 @@ export default function LastNameHooks() {
   }, [lastName, onFocus, onBlur]);
 
   function handleLastNameOnChange(e) {
-    if (!isAlpha(e.target.value)) {
-      setError("Can not have special characters or numbers");
-    }
+    // if (e.target.value.length === 0) {
+    //   setError("Last name can not be empty");
+    // }
+
+    // if (!isAlpha(e.target.value)) {
+    //   setError("Can not have special characters or numbers");
+    // }
     if (isAlpha(e.target.value)) {
-      setLastName(e.target.target);
       setError("");
+      setLastName(e.target.value);
+
     }
   }
 
-  return [lastName, handleLastNameOnChange, error, setOnFocus, setOnBlur];
+  return [
+    lastName,
+    handleLastNameOnChange,
+    error,
+    setOnFocus,
+    setOnBlur
+  ]
 }

@@ -1,5 +1,6 @@
 import {
-    useState
+    useState,
+    useEffect
 } from 'react';
 import {
     isAlpha
@@ -8,6 +9,26 @@ import {
 export default function FirstNameHooks() {
     const [firstName, setFirstName] = useState("");
     const [error, setError] = useState("");
+    const [onFocus, setOnFocus] = useState(false);
+    const [onBlur, setOnBlur] = useState(false);
+
+    useEffect(() => {
+        if (onFocus) {
+            if (firstName.length > 0) {
+                if (!isAlpha(firstName)) {
+                    setError("First name must be letters only");
+                }
+            }
+        }
+
+        if (onBlur) {
+            if (firstName.length === 0) {
+                setError("First name not be empty");
+            }
+        }
+    }, [firstName, onFocus, onBlur])
+
+
 
     function handleFirstNameOnChange(e) {
         if (!isAlpha(e.target.value)) {
@@ -22,6 +43,6 @@ export default function FirstNameHooks() {
             setFirstName(e.target.value);
         }
     }
-    return [firstName, handleFirstNameOnChange, error];
+    return [firstName, handleFirstNameOnChange, error, setOnFocus, setOnBlur];
 
 }
