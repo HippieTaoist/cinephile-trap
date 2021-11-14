@@ -7,17 +7,17 @@ var {
 
 const {
     createMovie,
-    getFavoriteMovies,
-    deleteMovieByImdbId,
+    // getFavoriteMovies,
+    // deleteMovieByImdbId,
     updateMovieByImdbId,
 } = require("./controller/moviesController")
 
-router.get("/", getFavoriteMovies)
+// router.get("/", getFavoriteMovies)
 
 router.post("/create-movie", createMovie)
 
-router.delete("/delete-movie-by-imdbId/:id", deleteMovieByImdbId)
+// router.delete("/delete-movie-by-imdbId/:id", deleteMovieByImdbId)
 
-router.update("/update-movie-by-imdbId/:id", updateMovieByImdbId)
+router.put("/update-movie-by-imdbId/:id", updateMovieByImdbId)
 
 module.exports = router

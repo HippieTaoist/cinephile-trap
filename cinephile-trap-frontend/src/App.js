@@ -41,6 +41,20 @@ function App() {
       <ToastContainer theme="colored" />
       <Router>
         <Nav user={user} setUser={setUser} />
+        <Routes>
+          <Route path="/sign-up" element={<SignUp />} />
+
+          <Route path="/sign-in" element={<SignIn setUser={setUser} />} />
+          <Route
+            path="/protected-home"
+            element={
+              <PrivateRoute>
+                <ProtectedHome />
+              </PrivateRoute>
+            }
+          />
+          <Route path="/" element={<h1>Home Page</h1>} />
+        </Routes>
       </Router>
     </>
   );

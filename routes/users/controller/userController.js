@@ -72,7 +72,7 @@ async function createUser(req, res) {
         email,
         password
     } = req.body;
-
+    console.log(req.body);
     try {
         let salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);

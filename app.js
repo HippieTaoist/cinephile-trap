@@ -9,7 +9,7 @@ const cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users/usersRouter");
-// var moviesRouter = require("./routes/movies/moviesRouter");
+var moviesRouter = require("./routes/movies/moviesRouter");
 
 const mongoose = require("mongoose");
 mongoose
@@ -43,12 +43,14 @@ var app = express();
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/api/users", usersRouter);
-// app.use("/api/movies", moviesRouter);
+app.use("/api/movies", moviesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
