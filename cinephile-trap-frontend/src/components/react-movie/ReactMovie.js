@@ -4,24 +4,17 @@ import axios from "axios";
 import Loading from "../common/Loading";
 import MovieLoad from "../movieload/MovieLoad";
 import TheErr from "../error-handle/TheErr";
-import MovieResults from "./movie-results/MovieResults";
+import MovieResults from "./movieResults/MovieResults";
 
 export default function ReactMovie() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [imdb, setImdb] = useState("tt0113243");
   const [movieArray, setMovieArray] = useState([]);
-  const [search, setSearch] = useState("");
-
-  async function fetchMovieByImdb(imdb) {
-    let fetchMovie = await axios.get(
-      `http://www.omdbapi.com/?=${imdb}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`
-    );
-  }
+  const [search, setSearch] = useState("Batman");
 
   async function fetchMovieByName() {
-    console.log(search);
-    let result = await axios.get(
+    let payload = await axios.get(
       `http://omdbapi.com/?s=${search}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`,
       {
         params: {
@@ -29,16 +22,37 @@ export default function ReactMovie() {
         },
       }
     );
-    console.log(result);
-    setMovieArray(result.data.Search);
-    console.log(movieArray);
+
+    let movieImdbIdArray = payload.data.Search.map((item) => item.imdbID);
+
+    let promiseMovieArray = movieImdbIdArray.map(async (imdbID) => {
+      return fetchMovieByImdb(imdbID);
+    });
+
+    Promise.all(promiseMovieArray)
+      .then((result) => {
+        console.log(result);
+        setMovieArray(result);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   }
 
-  //   async function applyMovieRating(imdb) {}
+  async function fetchMovieByImdb(imdb) {
+    let fetchMovie = await axios.get(
+      `http://www.omdbapi.com/?i=${imdb}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`
+    );
+    // console.log(fetchMovie);
+    return fetchMovie;
+  }
 
   function handleOnClick() {
     fetchMovieByName();
   }
+  //   useEffect(() => {
+  //     handleOnClick();
+  //   }, [handleOnClick]);
 
   function handleEnterPress(e) {
     console.log("handleEnterPress");
@@ -67,3 +81,19 @@ export default function ReactMovie() {
     </div>
   );
 }
+
+//   async function applyMovieRating(movieArray) {
+//     let movieResult = await axios.get(
+//       `http://www.omdbapi.com/?i=${movie.imdbID}&apikey=${process.env.REACT_APP_MOVIE_API_KEY}`
+//     );
+//     let movieResultRating = Object.assign({}, movieResult);
+//     console.log(movieResultRating);
+//     // ;
+
+//     return resultingArray;
+
+//     let movies = [...movieArray];
+
+//     movies[index] = movie;
+//     setMovieArray(movies);
+//   }

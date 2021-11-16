@@ -8,11 +8,14 @@ export default function Nav({ user, setUser }) {
   let linkTitle2 = user ? "Log-Out" : "Sign-In";
   let link2 = user ? "/" : "/sign-in";
 
+  let linkTitle3 = user ? "Search Movies" : "Search Movies";
+  let link3 = user ? "/search-movies" : "/search-movies";
+
   let logOutButton = user ? logOut : () => {};
 
   function logOut() {
     setUser(null);
-    window.localStorage.removeItem("jwtTowken");
+    window.localStorage.removeItem("jwtToken");
   }
 
   return (
@@ -36,6 +39,11 @@ export default function Nav({ user, setUser }) {
                   onClick={() => logOutButton()}
                 >
                   {linkTitle2}
+                </Link>
+              </li>
+              <li>
+                <Link to={link3} className="nav-link" aria-current="page">
+                  {linkTitle3}
                 </Link>
               </li>
             </ul>

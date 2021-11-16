@@ -1,0 +1,33 @@
+import React from 'react'
+import {
+    Navigate,
+    useLocation
+} from 'react-router-dom'
+
+import CheckToken from "../../hooks/CheckToken"
+
+export default function PrivateRoute({
+    children
+}) {
+
+    const {
+        checkJwtToken,
+
+    } = CheckToken();
+
+    const location = useLocation();
+
+    console.log(checkJwtToken())
+    if (checkJwtToken()) {
+        return children
+    } else {
+        return <Navigate to = '/sign-in'
+        state = {
+            {
+                from: location
+            }
+        }
+        />
+    }
+
+}

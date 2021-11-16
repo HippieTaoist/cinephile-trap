@@ -104,7 +104,7 @@ async function createUser(req, res) {
 async function loginUser(req, res) {
     const {
         email,
-        username,
+        // username,
         password,
     } = req.body;
 
@@ -120,7 +120,7 @@ async function loginUser(req, res) {
         if (!foundUserEmail) {
             return res.status(500).json({
                 message: "Error in Logging In User",
-                error: " Go SIgn UP",
+                error: " Go Sign UP",
             })
         } else {
             let comparedPassword = await bcrypt.compare(password, foundUserEmail.password);
@@ -178,11 +178,15 @@ async function updateUser(req, res) {
     console.log('                updateUser Called');
     console.log('');
     console.log('');
+
+
+
     try {
         const {
             imdbID,
             likeIt,
         } = req.body
+
         const decodedData = res.locals.decodedData;
 
         let foundUser = await User.findOne({
@@ -237,10 +241,10 @@ async function updateUser(req, res) {
 
 
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             message: "There is an error updating your profile",
             error: err.message,
-            err
         })
     }
 }

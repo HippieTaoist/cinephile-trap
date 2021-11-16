@@ -8,8 +8,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Nav from "./components/nav/Nav";
 import SignIn from "./components/signIn/SignIn";
 import SignUp from "./components/signUp/SignUp";
+import ReactMovie from "./components/react-movie/ReactMovie";
 import ProtectedHome from "./components/protectHome/ProtectHome";
 import PrivateRoute from "./components/privateRoute/PrivateRoute";
+import Profile from "./components/profile/Profile";
 
 require("dotenv").config();
 
@@ -43,7 +45,8 @@ function App() {
         <Nav user={user} setUser={setUser} />
         <Routes>
           <Route path="/sign-up" element={<SignUp />} />
-
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/search-movies" element={<ReactMovie />} />
           <Route path="/sign-in" element={<SignIn setUser={setUser} />} />
           <Route
             path="/protected-home"

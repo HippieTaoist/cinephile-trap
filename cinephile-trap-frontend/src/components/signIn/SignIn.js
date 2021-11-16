@@ -8,7 +8,7 @@ import CheckToken from "../../hooks/CheckToken";
 
 import "./SignIn.css";
 
-export default function SignIn() {
+export default function SignIn({ setUser }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +39,7 @@ export default function SignIn() {
 
       let decodedToken = jwtDecode(payload.data.payload);
 
-      setUsername({
+      setUser({
         email: decodedToken.email,
         username: decodedToken.username,
       });

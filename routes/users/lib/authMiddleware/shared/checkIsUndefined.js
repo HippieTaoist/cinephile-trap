@@ -2,6 +2,7 @@ const undefined = "";
 
 function checkIsUndefined(req, res, next) {
   if (Object.keys(req.body).length === 0 || req.body === undefined) {
+    console.log('hello');
     return res.status(500).json({
       message: "I Checked and is undefined.",
       error: "Please fill out the form with validity",
@@ -11,4 +12,6 @@ function checkIsUndefined(req, res, next) {
   }
 }
 
-module.exports = { checkIsUndefined };
+module.exports = {
+  checkIsUndefined
+};
