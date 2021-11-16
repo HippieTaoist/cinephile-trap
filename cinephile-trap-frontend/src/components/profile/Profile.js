@@ -4,13 +4,17 @@ import React, { useState, useEffect } from "react";
 import MovieLoad from "../movieload/MovieLoad";
 import fetchMovieByImdb from "../react-movie/ReactMovie";
 
+import CheckToken from "../../hooks/CheckToken";
+
 export default function Profile() {
   const [userInfo, setUserInfo] = useState({});
   const [favoriteMoviesArray, setFavoriteMoviesArray] = useState([]);
 
   let jwtToken = window.localStorage.getItem("jwtToken");
 
-  let getUserInfo = async () => {
+  const { checkJwtToken } = CheckToken();
+
+  async function getUserInfo() {
     let payload = await axios.get(
       "http://localhost:3001/api/users/my-favorite-movies",
       {
@@ -45,11 +49,17 @@ export default function Profile() {
       .catch((err) => {
         console.log(err);
       });
-  };
-  getUserInfo();
+  }
+  useEffect(() => {
+    if (checkJwtToken()) {
+      getUserInfo();
+    }
+  });
+
   return (
     <div>
-      <MovieLoad movieArray={favoriteMoviesArray} />
+      <div>These are your favorite movies</div>
+      <MovieLoad movieArray={favoriteMoviesArray} />{" "}
     </div>
   );
 }
